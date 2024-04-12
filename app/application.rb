@@ -3,7 +3,6 @@ require 'omniauth'
 require 'omniauth-google-oauth2'
 require_relative '../db/database'
 
-
 class Application < Sinatra::Base
   EXPIRATE_AFTER = 120 # seconds
 
@@ -68,8 +67,3 @@ class Application < Sinatra::Base
     'Failure -> callback error'
   end
 end
-
-# qdo usar o get ou post '/auth/:provider/callback'?
-# deveria cryptografa logs? secret, password key session_id, csrf
-
-# tentar abruir duas sessoes
