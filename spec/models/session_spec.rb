@@ -1,8 +1,5 @@
-# require 'sinatra'
-# require 'sinatra/activerecord'
 require 'spec_helper'
 require 'pry'
-# require_relative '../../app/models/session' 
 
 RSpec.describe Session, type: :model do
   describe '.create' do

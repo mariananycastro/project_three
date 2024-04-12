@@ -1,12 +1,12 @@
 build:
-	@docker-compose build
+	docker-compose build
 
 bash:
 	docker compose up -d
 	docker exec -it sinatra bash
 
 down:
-	@docker compose down
+	docker compose down
 
 stop:
 	docker stop
