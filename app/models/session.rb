@@ -2,6 +2,7 @@ require 'sinatra/activerecord'
 require 'bcrypt'
 
 class Session < ActiveRecord::Base
+  encrypts :email, deterministic: true
   validates :email, :expires_at, :session_id_digest, presence: true
 
   def initialize(attributes = {})
@@ -21,7 +22,7 @@ class Session < ActiveRecord::Base
   end
 
   def self.active_sessions(user_email)
-    where('email = ? AND expires_at >= ?', user_email, Time.now)
+    where(email: user_email).where('expires_at >= ?', Time.now)
   end
 
   def self.active_session(user_email)

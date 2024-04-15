@@ -30,6 +30,15 @@ COOKIE_SECRET='your_secret_key12345678901234567890123456789012345678901234567890
 make server
 ```
 
+## To generate 
+Add the keys above in .env:
+- PRIMARY_KEY
+- DETERMINISTIC_KEY
+- KEY_DERIVATION_SALT
+
+To generate them:
+```rake db:encryption:init```
+
 ## Tests
 ```
 rspec spec
