@@ -13,5 +13,4 @@ stop:
 
 server:
 	docker compose up -d
-	docker exec -it sinatra /bin/sh -c "bin/setup \
-		&& bundle exec rackup --host 0.0.0.0 -p 4567"
+	docker exec -it sinatra /bin/sh -c "bundle exec rackup --host 0.0.0.0 -p 4567"
