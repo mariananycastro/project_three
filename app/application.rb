@@ -37,7 +37,8 @@ class Application < Sinatra::Base
   end
 
   get '/login' do   
-    erb :'../views/login', locals: { 
+    erb :'../views/login', layout: :application,
+    locals: {
       google_key: ENV['GOOGLE_KEY'],
       csrf_token: request.env['rack.session']['csrf']
     }
@@ -64,4 +65,18 @@ class Application < Sinatra::Base
     content_type 'text/plain'
     'Failure -> callback error'
   end
+
+  def user_signed_in?
+    if omniauth_auth_email
+      current_session = Session.active_session(omniauth_auth_email)
+      return true if current_session && current_session.session_id_correct?(session[:session_id])
+    end
+
+    false
+  end
+
+  def omniauth_auth_email
+    session[:omniauth_auth] ? session[:omniauth_auth]['info']['email'] : nil
+  end
+
 end
