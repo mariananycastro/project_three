@@ -5,6 +5,8 @@ require 'omniauth-google-oauth2'
 require_relative '../db/database'
 
 class Application < Sinatra::Base
+  EXPIRATE_AFTER = 120 # seconds
+
   register Sinatra::Flash
 
   configure do
@@ -28,17 +30,21 @@ class Application < Sinatra::Base
   get '/' do
     redirect '/login' unless user_signed_in?
 
-      policies = get_policies_by_email
+    policies = get_policies_by_email
 
-      return 'Ops.. something went wrong' unless policies
-
+    if policies
       return erb :'../views/home', layout: :application, locals: {
         policies: policies,
         email: omniauth_auth_email
       }
+    end
+
+    return erb :'../views/generic_error', layout: :application, locals: {
+      email: omniauth_auth_email
+    }
   end
 
-  get '/login' do   
+  get '/login' do
     erb :'../views/login', layout: :application,
     locals: {
       google_key: ENV['GOOGLE_KEY'],
@@ -55,9 +61,9 @@ class Application < Sinatra::Base
     redirect '/login' unless user_signed_in?
 
     erb :'../views/new_policy', layout: :application,
-    locals: {
-      email: omniauth_auth_email
-    }
+      locals: {
+        email: omniauth_auth_email
+      }
   end
 
   post '/create_policy' do
@@ -65,7 +71,7 @@ class Application < Sinatra::Base
 
     response = create_policy(params)
 
-    if response[:errors].empty?
+    if response && !response[:errors]
       flash[:success] = 'Policy successfully created!'
     else
       flash[:failed] = 'Policy not created! Try again later'
@@ -87,7 +93,7 @@ class Application < Sinatra::Base
       email: user_email,
       expires_at: EXPIRATE_AFTER.seconds.from_now
     )
-    
+
     redirect '/'
   end
 
@@ -114,8 +120,15 @@ class Application < Sinatra::Base
     headers = { 'Content-Type' => 'application/json'}
     body = { query: query }
     response = Net::HTTP.post(uri, body.to_json, headers)
+    JSON.parse(response.body)
+  rescue StandardError
+    Rails.logger.tagged("Graphql Request") do |logger|
+      logger.error e.message
+      logger.error query
+      logger.error e.backtrace.join("\n")
+    end
 
-    response ? JSON.parse(response.body) : nil
+    { errors: [{ message: 'Failed to open TCP connection' }]}
   end
 
   def policies_by_email_query
@@ -142,20 +155,23 @@ class Application < Sinatra::Base
 
   def get_policies_by_email
     policies = graphql_request(policies_by_email_query)
+
+    return nil if policies[:errors]
+
     policies.deep_symbolize_keys[:data][:policiesByEmailQuery]
   end
 
   def create_policy_query(params)
     <<-GRAPHQL
-        mutation {
-          createPolicy(
-            policy: {
+    mutation {
+      createPolicy(
+        policy: {
               effectiveFrom: "#{params[:effective_from]}"
               effectiveUntil: "#{params[:effective_until]}"
               insuredPerson: {
                 name: "#{params[:name]}",
                 document: "#{params[:document]}",
-                email: "#{params[:email]}"
+                email: "#{omniauth_auth_email}"
               }
               vehicle: {
                 brand: "#{params[:vehicle_brand]}"
@@ -164,12 +180,7 @@ class Application < Sinatra::Base
                 licensePlate: "#{params[:license_plate]}"
               }
             }
-          ) {
-            response {
-              status
-              errors
-            }
-          }
+          ) { response }
         }
       GRAPHQL
   end
@@ -178,15 +189,6 @@ class Application < Sinatra::Base
     query = create_policy_query(params)
     response = graphql_request(query)
 
-    if response
-      response.deep_symbolize_keys
-    else
-      nil
-    end
-
-    return response if response[:errors]
-  
-    response[:data][:createPolicy][:response]
-
+    response ? response.deep_symbolize_keys : response
   end
 end
