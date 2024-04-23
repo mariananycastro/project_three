@@ -11,9 +11,9 @@
     <th>Effective from</th>
     <th>Effective Until</th>
   </tr>
-  <tr>
-    <% if policies.length > 0 %>
-      <% policies.each do |policie| %>
+  <% if policies.length > 0 %>
+  <% policies.each do |policie| %>
+    <tr>
         <td><%= policie[:insuredPerson][:name] %></td>
         <td><%= policie[:insuredPerson][:document] %></td>
         <td><%= policie[:insuredPerson][:email] %></td>
@@ -24,8 +24,10 @@
         <td><%= policie[:effectiveFrom] %></td>
         <td><%= policie[:effectiveUntil] %></td>
       <% end %>
+    </tr>
     <% else %>
-      <td> No policies </td>
+      <tr>
+        <td> No policies </td>
+      </tr>
     <% end %>
-  </tr>
 </table>
