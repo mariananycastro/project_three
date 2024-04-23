@@ -1,10 +1,11 @@
 require 'sinatra'
+require 'sinatra/flash'
 require 'omniauth'
 require 'omniauth-google-oauth2'
 require_relative '../db/database'
 
 class Application < Sinatra::Base
-  EXPIRATE_AFTER = 120 # seconds
+  register Sinatra::Flash
 
   configure do
     enable :sessions
@@ -57,6 +58,20 @@ class Application < Sinatra::Base
     locals: {
       email: omniauth_auth_email
     }
+  end
+
+  post '/create_policy' do
+    redirect '/login' unless user_signed_in?
+
+    response = create_policy(params)
+
+    if response[:errors].empty?
+      flash[:success] = 'Policy successfully created!'
+    else
+      flash[:failed] = 'Policy not created! Try again later'
+    end
+
+    redirect '/'
   end
 
   get '/auth/:provider/callback' do
@@ -128,5 +143,50 @@ class Application < Sinatra::Base
   def get_policies_by_email
     policies = graphql_request(policies_by_email_query)
     policies.deep_symbolize_keys[:data][:policiesByEmailQuery]
+  end
+
+  def create_policy_query(params)
+    <<-GRAPHQL
+        mutation {
+          createPolicy(
+            policy: {
+              effectiveFrom: "#{params[:effective_from]}"
+              effectiveUntil: "#{params[:effective_until]}"
+              insuredPerson: {
+                name: "#{params[:name]}",
+                document: "#{params[:document]}",
+                email: "#{params[:email]}"
+              }
+              vehicle: {
+                brand: "#{params[:vehicle_brand]}"
+                vehicleModel: "#{params[:vehicle_model]}"
+                year: "#{params[:year]}"
+                licensePlate: "#{params[:license_plate]}"
+              }
+            }
+          ) {
+            response {
+              status
+              errors
+            }
+          }
+        }
+      GRAPHQL
+  end
+
+  def create_policy(params)
+    query = create_policy_query(params)
+    response = graphql_request(query)
+
+    if response
+      response.deep_symbolize_keys
+    else
+      nil
+    end
+
+    return response if response[:errors]
+  
+    response[:data][:createPolicy][:response]
+
   end
 end
