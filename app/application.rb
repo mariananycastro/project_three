@@ -25,15 +25,16 @@ class Application < Sinatra::Base
   end
 
   get '/' do
-    omniauth_auth_email = session[:omniauth_auth] ? session[:omniauth_auth]['info']['email'] : nil
+    redirect '/login' unless user_signed_in?
 
-    if omniauth_auth_email
-      current_session = Session.active_session(omniauth_auth_email)
-      if current_session && current_session.session_id_correct?(session[:session_id])
-        return 'initial page'
-      end
-    end
-    redirect '/login'
+      policies = get_policies_by_email
+
+      return 'Ops.. something went wrong' unless policies
+
+      return erb :'../views/home', layout: :application, locals: {
+        policies: policies,
+        email: omniauth_auth_email
+      }
   end
 
   get '/login' do   
@@ -84,4 +85,39 @@ class Application < Sinatra::Base
     session[:omniauth_auth] ? session[:omniauth_auth]['info']['email'] : nil
   end
 
+  def graphql_request(query)
+    uri = URI(ENV['GRAPHQL_URL'])
+    headers = { 'Content-Type' => 'application/json'}
+    body = { query: query }
+    response = Net::HTTP.post(uri, body.to_json, headers)
+
+    response ? JSON.parse(response.body) : nil
+  end
+
+  def policies_by_email_query
+    <<-GRAPHQL
+      query {
+        policiesByEmailQuery(email: "#{omniauth_auth_email}") {
+          effectiveFrom
+          effectiveUntil
+          insuredPerson {
+            name
+            email
+            document
+          }
+          vehicle {
+            brand
+            vehicleModel
+            year
+            licensePlate
+          }
+        }
+      }
+    GRAPHQL
+  end
+
+  def get_policies_by_email
+    policies = graphql_request(policies_by_email_query)
+    policies.deep_symbolize_keys[:data][:policiesByEmailQuery]
+  end
 end
