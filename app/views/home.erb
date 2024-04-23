@@ -12,17 +12,17 @@
     <th>Effective Until</th>
   </tr>
   <% if policies.length > 0 %>
-  <% policies.each do |policie| %>
+  <% policies.each do |policy| %>
     <tr>
-        <td><%= policie[:insuredPerson][:name] %></td>
-        <td><%= policie[:insuredPerson][:document] %></td>
-        <td><%= policie[:insuredPerson][:email] %></td>
-        <td><%= policie[:vehicle][:brand] %> <%= policie[:vehicle][:model] %></td>
-        <td><%= policie[:vehicle][:vehicleModel] %></td>
-        <td><%= policie[:vehicle][:year] %></td>
-        <td><%= policie[:vehicle][:licensePlate] %></td>
-        <td><%= policie[:effectiveFrom] %></td>
-        <td><%= policie[:effectiveUntil] %></td>
+        <td><%= policy[:insuredPerson][:name] %></td>
+        <td><%= policy[:insuredPerson][:document] %></td>
+        <td><%= policy[:insuredPerson][:email] %></td>
+        <td><%= policy[:vehicle][:brand] %> <%= policy[:vehicle][:model] %></td>
+        <td><%= policy[:vehicle][:vehicleModel] %></td>
+        <td><%= policy[:vehicle][:year] %></td>
+        <td><%= policy[:vehicle][:licensePlate] %></td>
+        <td><%= policy[:effectiveFrom] %></td>
+        <td><%= policy[:effectiveUntil] %></td>
       <% end %>
     </tr>
     <% else %>

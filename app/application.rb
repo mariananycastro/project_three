@@ -41,7 +41,7 @@ class Application < Sinatra::Base
       }
     end
 
-    return erb :'../views/generic_error', layout: :application, locals: {
+    erb :'../views/generic_error', layout: :application, locals: {
       email: omniauth_auth_email
     }
   end
@@ -114,6 +114,6 @@ class Application < Sinatra::Base
   end
 
   def omniauth_auth_email
-    session[:omniauth_auth] ? session[:omniauth_auth]['info']['email'] : nil
+    session.dig(:omniauth_auth, 'info', 'email')
   end
 end
