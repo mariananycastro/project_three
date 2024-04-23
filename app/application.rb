@@ -3,6 +3,8 @@ require 'sinatra/flash'
 require 'omniauth'
 require 'omniauth-google-oauth2'
 require_relative '../db/database'
+require_relative './requesters/policies_by_email_requester'
+require_relative './requesters/create_policy_requester'
 
 class Application < Sinatra::Base
   EXPIRATE_AFTER = 120 # seconds
@@ -30,7 +32,7 @@ class Application < Sinatra::Base
   get '/' do
     redirect '/login' unless user_signed_in?
 
-    policies = get_policies_by_email
+    policies = PolicyByEmailRequester.execute(omniauth_auth_email)
 
     if policies
       return erb :'../views/home', layout: :application, locals: {
@@ -69,7 +71,7 @@ class Application < Sinatra::Base
   post '/create_policy' do
     redirect '/login' unless user_signed_in?
 
-    response = create_policy(params)
+    response = CreatePolicyRequester.execute(params.merge(email: omniauth_auth_email))
 
     if response && !response[:errors]
       flash[:success] = 'Policy successfully created!'
@@ -113,82 +115,5 @@ class Application < Sinatra::Base
 
   def omniauth_auth_email
     session[:omniauth_auth] ? session[:omniauth_auth]['info']['email'] : nil
-  end
-
-  def graphql_request(query)
-    uri = URI(ENV['GRAPHQL_URL'])
-    headers = { 'Content-Type' => 'application/json'}
-    body = { query: query }
-    response = Net::HTTP.post(uri, body.to_json, headers)
-    JSON.parse(response.body)
-  rescue StandardError
-    Rails.logger.tagged("Graphql Request") do |logger|
-      logger.error e.message
-      logger.error query
-      logger.error e.backtrace.join("\n")
-    end
-
-    { errors: [{ message: 'Failed to open TCP connection' }]}
-  end
-
-  def policies_by_email_query
-    <<-GRAPHQL
-      query {
-        policiesByEmailQuery(email: "#{omniauth_auth_email}") {
-          effectiveFrom
-          effectiveUntil
-          insuredPerson {
-            name
-            email
-            document
-          }
-          vehicle {
-            brand
-            vehicleModel
-            year
-            licensePlate
-          }
-        }
-      }
-    GRAPHQL
-  end
-
-  def get_policies_by_email
-    policies = graphql_request(policies_by_email_query)
-
-    return nil if policies[:errors]
-
-    policies.deep_symbolize_keys[:data][:policiesByEmailQuery]
-  end
-
-  def create_policy_query(params)
-    <<-GRAPHQL
-    mutation {
-      createPolicy(
-        policy: {
-              effectiveFrom: "#{params[:effective_from]}"
-              effectiveUntil: "#{params[:effective_until]}"
-              insuredPerson: {
-                name: "#{params[:name]}",
-                document: "#{params[:document]}",
-                email: "#{omniauth_auth_email}"
-              }
-              vehicle: {
-                brand: "#{params[:vehicle_brand]}"
-                vehicleModel: "#{params[:vehicle_model]}"
-                year: "#{params[:year]}"
-                licensePlate: "#{params[:license_plate]}"
-              }
-            }
-          ) { response }
-        }
-      GRAPHQL
-  end
-
-  def create_policy(params)
-    query = create_policy_query(params)
-    response = graphql_request(query)
-
-    response ? response.deep_symbolize_keys : response
   end
 end
