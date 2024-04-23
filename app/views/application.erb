@@ -5,6 +5,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
+    <style>
+      .flash-message {
+        border-radius: 4px;
+        margin-bottom: 20px;
+        padding: 10px;
+      }
+      .flash-success {
+        background-color: #dff0d8;
+        border: 1px solid #d6e9c6;
+        color: #3c763d;
+      }
+
+      .flash-failed {
+        background-color: #f2dede;
+        border: 1px solid #ebccd1;
+        color: #a94442;
+      }
     </style>
   </head>
   <body>
@@ -22,6 +39,11 @@
                 </form>
               </div>
               <div class="navbar-item button is-inverted">
+                <form method='get' action='/new_policy'>
+                  <button type="submit">Create New Policy</button>
+                </form>
+              </div>
+              <div class="navbar-item button is-inverted">
                 <form method='post' action='/logout'>
                   <button type="submit">Logout</button>
                 </form>
@@ -34,7 +56,19 @@
           </div>
         </div>
       </nav>
-              </div>
+    </div>
+  
+    <% if flash[:success] %>
+      <div class="flash-message flash-success">
+        <%= flash[:success] %>
+      </div>
+    <% end %>
+
+    <% if flash[:failed] %>
+      <div class="flash-message flash-failed">
+        <%= flash[:failed] %>
+      </div>
+    <% end %>
 
     <%= yield %>
 

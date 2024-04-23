@@ -9,10 +9,13 @@ gem 'bcrypt'
 gem 'activerecord'
 gem 'sinatra-activerecord'
 gem 'sqlite3'
+gem 'sinatra-flash'
 
 group :development, :test do
   gem 'pry'
   gem 'pry-byebug'
   gem 'rspec'
   gem 'database_cleaner'
+  gem 'webmock'
+  gem 'vcr'
 end
