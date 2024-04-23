@@ -1,0 +1,56 @@
+<h2 class="title is-3 center">Create a new policy</h2>
+<div style="margin: 0px auto; max-width: 720px;" class="container">
+  <form method='post' action='/create_policy'>
+    <div>
+      <label for="effective_from" class="label">Effective from:</label>
+      <input type="date" id="effective_from" name="effective_from" required class="input">
+    </div>
+
+    <div>
+      <label for="effective_until" class="label">Effective until:</label>
+      <input type="date" id="effective_until" name="effective_until" required class="input">
+    </div>
+
+    <div class="title is-4" style='padding-top: 25px'> Insured Person </div>
+    <div>
+      <label for="name" class="label">Name:</label>
+      <input type="text" id="name" name="name" required class="input">
+    </div>
+
+    <div>
+      <label for="document" class="label">Document:</label>
+      <input type="text" id="document" name="document" required class="input">
+    </div>
+
+    <div>
+      <label for="email" class="label">Email:</label>
+      <input type="email" id="email" name="email" required class="input">
+    </div>
+
+    <div class="title is-4" style='padding-top: 25px'> Vehicle </div>
+    <div>
+      <label for="vehicle_brand" class="label">Brand:</label>
+      <input type="text" id="vehicle_brand" name="vehicle_brand" required class="input">
+    </div>
+
+    <div>
+      <label for="vehicle_model" class="label">Model:</label>
+      <input type="text" id="vehicle_model" name="vehicle_model" required class="input">
+    </div>
+
+    <div>
+      <label for="year" class="label">Year:</label>
+      <input type="number" id="year" name="year" required class="input">
+    </div>
+
+    <div>
+      <label for="license_plate" class="label">License plate:</label>
+      <input type="text" id="license_plate" name="license_plate" required class="input">
+    </div>
+ 
+    <div>
+      <br />
+      <button class='button is-link' type='submit'>Create policy</button>
+    </div>
+  </form%>
+</div>

@@ -50,6 +50,15 @@ class Application < Sinatra::Base
     redirect '/login'
   end
 
+  get '/new_policy' do
+    redirect '/login' unless user_signed_in?
+
+    erb :'../views/new_policy', layout: :application,
+    locals: {
+      email: omniauth_auth_email
+    }
+  end
+
   get '/auth/:provider/callback' do
     content_type 'text/plain'
 
