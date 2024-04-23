@@ -1,0 +1,64 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: http://app-two:4000/graphql
+    body:
+      encoding: UTF-8
+      string: '{"query":"      query {\n        policiesByEmailQuery(email: \"maria@email.com\")
+        {\n          effectiveFrom\n          effectiveUntil\n          insuredPerson
+        {\n            name\n            email\n            document\n          }\n          vehicle
+        {\n            brand\n            vehicleModel\n            year\n            licensePlate\n          }\n        }\n      }\n"}'
+    headers:
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Host:
+      - app-two:4000
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - '0'
+      X-Content-Type-Options:
+      - nosniff
+      X-Download-Options:
+      - noopen
+      X-Permitted-Cross-Domain-Policies:
+      - none
+      Referrer-Policy:
+      - strict-origin-when-cross-origin
+      Content-Type:
+      - application/json; charset=utf-8
+      Vary:
+      - Accept
+      Etag:
+      - W/"cafb1a79aca69030fd302316a7f3ab77"
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      X-Request-Id:
+      - 7ef29edf-b80e-4fb1-ba75-daf831ec1865
+      X-Runtime:
+      - '0.132032'
+      Server-Timing:
+      - sql.active_record;dur=1.25, start_processing.action_controller;dur=0.12, process_action.action_controller;dur=31.14
+      Content-Length:
+      - '529'
+    body:
+      encoding: UTF-8
+      string: '{"data":{"policiesByEmailQuery":[{"effectiveFrom":"2024-03-19","effectiveUntil":"2025-03-19","insuredPerson":{"name":"Maria
+        Silva","email":"maria@email.com","document":"123.456.789-00"},"vehicle":{"brand":"Volkswagen","vehicleModel":"Gol
+        1.6","year":2022,"licensePlate":"ABC-5678"}},{"effectiveFrom":"2024-03-19","effectiveUntil":"2026-03-19","insuredPerson":{"name":"Maria
+        Silva","email":"maria@email.com","document":"123.456.789-00"},"vehicle":{"brand":"Fiat","vehicleModel":"Uno
+        1.0","year":1996,"licensePlate":"ABC-1234"}}]}}'
+  recorded_at: Tue, 23 Apr 2024 15:13:37 GMT
+recorded_with: VCR 6.2.0

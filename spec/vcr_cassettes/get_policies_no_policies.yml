@@ -1,0 +1,60 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: http://app-two:4000/graphql
+    body:
+      encoding: UTF-8
+      string: '{"query":"      query {\n        policiesByEmailQuery(email: \"no_policies@email.com\")
+        {\n          effectiveFrom\n          effectiveUntil\n          insuredPerson
+        {\n            name\n            email\n            document\n          }\n          vehicle
+        {\n            brand\n            vehicleModel\n            year\n            licensePlate\n          }\n        }\n      }\n"}'
+    headers:
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Host:
+      - app-two:4000
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - '0'
+      X-Content-Type-Options:
+      - nosniff
+      X-Download-Options:
+      - noopen
+      X-Permitted-Cross-Domain-Policies:
+      - none
+      Referrer-Policy:
+      - strict-origin-when-cross-origin
+      Content-Type:
+      - application/json; charset=utf-8
+      Vary:
+      - Accept
+      Etag:
+      - W/"5185fa8a2c04cbdcaf781e6c360df6ef"
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      X-Request-Id:
+      - 71ac3bbc-db67-47d1-8a2a-059c1e75b263
+      X-Runtime:
+      - '0.008318'
+      Server-Timing:
+      - start_processing.action_controller;dur=0.07, process_action.action_controller;dur=6.51
+      Content-Length:
+      - '36'
+    body:
+      encoding: UTF-8
+      string: '{"data":{"policiesByEmailQuery":[]}}'
+  recorded_at: Tue, 23 Apr 2024 15:14:40 GMT
+recorded_with: VCR 6.2.0
