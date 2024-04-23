@@ -44,6 +44,11 @@ class Application < Sinatra::Base
     }
   end
 
+  post '/logout' do
+    Session.expire_all(omniauth_auth_email)
+    redirect '/login'
+  end
+
   get '/auth/:provider/callback' do
     content_type 'text/plain'
 
