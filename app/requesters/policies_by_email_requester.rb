@@ -8,11 +8,12 @@ class PolicyByEmailRequester
   end
 
   def execute
-    policies = graphql_request
-
+    response = graphql_request
+    policies = JSON.parse(response).deep_symbolize_keys
+  
     return if policies[:errors]
 
-    policies.deep_symbolize_keys[:data][:policiesByEmailQuery]
+    policies[:data][:policiesByEmailQuery]
   end
 
   private

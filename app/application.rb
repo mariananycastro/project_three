@@ -35,7 +35,7 @@ class Application < Sinatra::Base
     return if request.path =~ AUTH_CALLBACK_PATHS
     return if user_signed_in?
 
-        redirect '/login'
+    redirect '/login'
   end
 
   get '/' do
