@@ -8,7 +8,7 @@ class CreatePolicyRequester
   end
 
   def execute
-    response = graphql_request(query)
+    response = graphql_request
 
     response&.deep_symbolize_keys
   end
