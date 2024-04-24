@@ -15,6 +15,8 @@ http_interactions:
     headers:
       Content-Type:
       - application/json
+      Authorization:
+      - Bearer sometoken12345678901234567890
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
@@ -49,15 +51,77 @@ http_interactions:
       Cache-Control:
       - max-age=0, private, must-revalidate
       X-Request-Id:
-      - 4dde6c3d-888f-4a02-bf1e-95b2dd71537c
+      - 48f3c2c3-49b5-4840-a878-4145b7fa1092
       X-Runtime:
-      - '0.007018'
+      - '0.007045'
       Server-Timing:
-      - start_processing.action_controller;dur=0.07, process_action.action_controller;dur=5.32
+      - start_processing.action_controller;dur=0.06, process_action.action_controller;dur=5.30
       Content-Length:
       - '42'
     body:
       encoding: UTF-8
       string: '{"data":{"createPolicy":{"response":200}}}'
-  recorded_at: Tue, 23 Apr 2024 16:49:30 GMT
+  recorded_at: Wed, 24 Apr 2024 21:26:28 GMT
+- request:
+    method: post
+    uri: http://app-two:4000/graphql
+    body:
+      encoding: UTF-8
+      string: '{"query":"    mutation {\n      createPolicy(\n        policy: {\n              effectiveFrom:
+        \"2024-04-23\"\n              effectiveUntil: \"2025-04-24\"\n              insuredPerson:
+        {\n                name: \"Maria Silva\",\n                document: \"222.222.222-22\",\n                email:
+        \"user_email@email.com\"\n              }\n              vehicle: {\n                brand:
+        \"Super top\"\n                vehicleModel: \"Novo modelo\"\n                year:
+        \"2020\"\n                licensePlate: \"ASD-0988\"\n              }\n            }\n          )
+        { response }\n        }\n"}'
+    headers:
+      Content-Type:
+      - application/json
+      Authorization:
+      - Bearer sometoken12345678901234567890
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Host:
+      - app-two:4000
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - '0'
+      X-Content-Type-Options:
+      - nosniff
+      X-Download-Options:
+      - noopen
+      X-Permitted-Cross-Domain-Policies:
+      - none
+      Referrer-Policy:
+      - strict-origin-when-cross-origin
+      Content-Type:
+      - application/json; charset=utf-8
+      Vary:
+      - Accept
+      Etag:
+      - W/"d191227638f6be87461045ac1ad6fe21"
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      X-Request-Id:
+      - 18f01c07-12a7-40fe-98e2-3d05b9bcb15b
+      X-Runtime:
+      - '0.016036'
+      Server-Timing:
+      - start_processing.action_controller;dur=0.06, process_action.action_controller;dur=6.04
+      Content-Length:
+      - '42'
+    body:
+      encoding: UTF-8
+      string: '{"data":{"createPolicy":{"response":200}}}'
+  recorded_at: Wed, 24 Apr 2024 21:26:56 GMT
 recorded_with: VCR 6.2.0

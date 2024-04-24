@@ -12,6 +12,8 @@ http_interactions:
     headers:
       Content-Type:
       - application/json
+      Authorization:
+      - Bearer sometoken12345678901234567890
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
@@ -46,15 +48,15 @@ http_interactions:
       Cache-Control:
       - max-age=0, private, must-revalidate
       X-Request-Id:
-      - 71ac3bbc-db67-47d1-8a2a-059c1e75b263
+      - 613bf3cb-a5f6-4544-86da-4abd6834f6e1
       X-Runtime:
-      - '0.008318'
+      - '0.007925'
       Server-Timing:
-      - start_processing.action_controller;dur=0.07, process_action.action_controller;dur=6.51
+      - start_processing.action_controller;dur=0.06, process_action.action_controller;dur=6.07
       Content-Length:
       - '36'
     body:
       encoding: UTF-8
       string: '{"data":{"policiesByEmailQuery":[]}}'
-  recorded_at: Tue, 23 Apr 2024 15:14:40 GMT
+  recorded_at: Wed, 24 Apr 2024 21:21:09 GMT
 recorded_with: VCR 6.2.0

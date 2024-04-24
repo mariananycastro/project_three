@@ -337,12 +337,12 @@ describe 'Application' do
             callback_request
 
             post '/create_policy', policy_params
-
-            expect(last_response).to be_redirect
-            follow_redirect!
-            
-            expect(last_request.path).to eq('/')
           end
+
+          expect(last_response).to be_redirect
+          follow_redirect!
+          
+          expect(last_request.path).to eq('/')
         end
 
         it 'shows success flash message' do
@@ -350,12 +350,13 @@ describe 'Application' do
             callback_request
 
             post '/create_policy', policy_params
-
-            follow_redirect!
-            flash_message = last_request.env['rack.session.unpacked_cookie_data']['flash']
-            
-            expect(flash_message[:success]).to eq('Policy successfully created!')
           end
+
+          follow_redirect!
+
+          flash_message = last_request.env['rack.session.unpacked_cookie_data']['flash']
+          
+          expect(flash_message[:success]).to eq('Policy successfully created!')
         end
       end
 
@@ -365,12 +366,12 @@ describe 'Application' do
             callback_request
 
             post '/create_policy', policy_params
-
-            expect(last_response).to be_redirect
-            follow_redirect!
-            
-            expect(last_request.path).to eq('/')
           end
+
+          expect(last_response).to be_redirect
+          follow_redirect!
+          
+          expect(last_request.path).to eq('/')
         end
 
         it 'shows success flash message' do
@@ -378,12 +379,12 @@ describe 'Application' do
             callback_request
 
             post '/create_policy', policy_params
-
-            follow_redirect!
-            flash_message = last_request.env['rack.session.unpacked_cookie_data']['flash']
-            
-            expect(flash_message[:failed]).to eq('Policy not created! Try again later')
           end
+
+          follow_redirect!
+          flash_message = last_request.env['rack.session.unpacked_cookie_data']['flash']
+          
+          expect(flash_message[:failed]).to eq('Policy not created! Try again later')
         end
       end
     end
