@@ -7,7 +7,8 @@ require_relative './requesters/policies_by_email_requester'
 require_relative './requesters/create_policy_requester'
 
 class Application < Sinatra::Base
-  NOT_LOGGED_IN_PATHS = %w(/login /logout)
+  LOGIN_PATHS = %r{/(login|logout)}
+  AUTH_CALLBACK_PATHS = %r{/(auth/[^/]+/(callback|failure))}
 
   register Sinatra::Flash
 
@@ -30,13 +31,11 @@ class Application < Sinatra::Base
   end
 
   before do
-    if (!NOT_LOGGED_IN_PATHS.include?(request.path) &&
-      request.path !~ %r{/(auth/[^/]+/(callback|failure))} &&
-        !user_signed_in?)
+    return if request.path =~ LOGIN_PATHS
+    return if request.path =~ AUTH_CALLBACK_PATHS
+    return if user_signed_in?
 
         redirect '/login'
-      end
-    end
   end
 
   get '/' do
