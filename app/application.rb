@@ -7,7 +7,7 @@ require_relative './requesters/policies_by_email_requester'
 require_relative './requesters/create_policy_requester'
 
 class Application < Sinatra::Base
-  EXPIRATE_AFTER = 120 # seconds
+  NOT_LOGGED_IN_PATHS = %w(/login /logout)
 
   register Sinatra::Flash
 
@@ -29,9 +29,17 @@ class Application < Sinatra::Base
     provider :google_oauth2, ENV['GOOGLE_KEY'], ENV['GOOGLE_SECRET'], scope: 'email'
   end
 
-  get '/' do
-    redirect '/login' unless user_signed_in?
+  before do
+    if (!NOT_LOGGED_IN_PATHS.include?(request.path) &&
+      request.path !~ %r{/(auth/[^/]+/(callback|failure))} &&
+        !user_signed_in?)
 
+        redirect '/login'
+      end
+    end
+  end
+
+  get '/' do
     policies = PolicyByEmailRequester.execute(omniauth_auth_email)
 
     if policies
@@ -60,8 +68,6 @@ class Application < Sinatra::Base
   end
 
   get '/new_policy' do
-    redirect '/login' unless user_signed_in?
-
     erb :'../views/new_policy', layout: :application,
       locals: {
         email: omniauth_auth_email
@@ -69,8 +75,6 @@ class Application < Sinatra::Base
   end
 
   post '/create_policy' do
-    redirect '/login' unless user_signed_in?
-
     response = CreatePolicyRequester.execute(params.merge(email: omniauth_auth_email))
 
     if response && !response[:errors]

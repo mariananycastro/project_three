@@ -237,7 +237,6 @@ describe 'Application' do
         get '/auth/google_oauth2/failure'
 
         expect(last_request.path).to eq('/auth/google_oauth2/failure')
-
         expect(last_response.body).to eq 'Failure -> callback error'
       end
     end
