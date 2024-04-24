@@ -1,0 +1,33 @@
+<h1 class="title is-2 center">All policies</h1>
+<table class="policy-list table is-hoverable">
+  <tr>
+    <th>Name</th>
+    <th>Document</th>
+    <th>Email</th>
+    <th>Vehicle Brand</th>
+    <th>Vehicle Model</th>
+    <th>Vehicle Year</th>
+    <th>Vehicle Plate</th>
+    <th>Effective from</th>
+    <th>Effective Until</th>
+  </tr>
+  <% if policies.length > 0 %>
+  <% policies.each do |policy| %>
+    <tr>
+        <td><%= policy[:insuredPerson][:name] %></td>
+        <td><%= policy[:insuredPerson][:document] %></td>
+        <td><%= policy[:insuredPerson][:email] %></td>
+        <td><%= policy[:vehicle][:brand] %> <%= policy[:vehicle][:model] %></td>
+        <td><%= policy[:vehicle][:vehicleModel] %></td>
+        <td><%= policy[:vehicle][:year] %></td>
+        <td><%= policy[:vehicle][:licensePlate] %></td>
+        <td><%= policy[:effectiveFrom] %></td>
+        <td><%= policy[:effectiveUntil] %></td>
+      <% end %>
+    </tr>
+    <% else %>
+      <tr>
+        <td> No policies </td>
+      </tr>
+    <% end %>
+</table>
