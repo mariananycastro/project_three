@@ -10,6 +10,7 @@ gem 'activerecord'
 gem 'sinatra-activerecord'
 gem 'sqlite3'
 gem 'sinatra-flash'
+gem 'jwt'
 
 group :development, :test do
   gem 'pry'
