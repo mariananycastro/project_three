@@ -12,10 +12,6 @@ module GraphqlRequester
 
   def graphql_request
     uri = URI(ENV['GRAPHQL_URL'])
-
-    expiration_time = Time.now.to_i + EXPIRATE_TOKEN
-    jwt_token = JWT.encode({ exp: expiration_time }, ENV['JWT_SECRET'], ENV['JWT_ALGORITHM'])
-
     headers = {
       'Content-Type' => 'application/json',
       'Authorization' => "Bearer #{jwt_token}"
@@ -41,6 +37,7 @@ module GraphqlRequester
   private
 
   def jwt_token
-    JWT.encode(payload, ENV['JWT_SECRET'], ENV['JWT_ALGORITHM'])
+    expiration_time = Time.now.to_i + EXPIRATE_TOKEN
+    JWT.encode({ exp: expiration_time }, ENV['JWT_SECRET'], ENV['JWT_ALGORITHM'])
   end
 end
