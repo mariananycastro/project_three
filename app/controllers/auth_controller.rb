@@ -4,6 +4,19 @@ require_relative '../../db/database'
 class AuthController < Sinatra::Base
   include SessionHelper
 
+  get '/login' do
+    erb :'../views/login', layout: :application,
+    locals: {
+      google_key: ENV['GOOGLE_KEY'],
+      csrf_token: request.env['rack.session']['csrf']
+    }
+  end
+
+  post '/logout' do
+    Session.expire_all(omniauth_auth_email)
+    redirect '/login'
+  end
+
   get '/auth/:provider/callback' do
     content_type 'text/plain'
 

@@ -246,7 +246,7 @@ describe 'Application' do
     let(:email) { 'maria@email.com' }
 
     it 'expires all sessions from email'do
-      allow_any_instance_of(Application).to receive(:omniauth_auth_email).and_return(email)
+      allow_any_instance_of(SessionHelper).to receive(:omniauth_auth_email).and_return(email)
       allow(Session).to receive(:expire_all)
 
       post '/logout'
@@ -264,8 +264,8 @@ describe 'Application' do
       let(:email) { 'maria@email.com' }
 
       it 'show create policy form' do
-        allow_any_instance_of(Application).to receive(:omniauth_auth_email).and_return(email)
-        allow_any_instance_of(Application).to receive(:user_signed_in?).and_return(true)
+        allow_any_instance_of(SessionHelper).to receive(:omniauth_auth_email).and_return(email)
+        allow_any_instance_of(SessionHelper).to receive(:user_signed_in?).and_return(true)
 
         get '/new_policy'
 
@@ -327,7 +327,7 @@ describe 'Application' do
       end
 
       before do
-        allow_any_instance_of(Application).to receive(:user_signed_in?).and_return(true)
+        allow_any_instance_of(SessionHelper).to receive(:user_signed_in?).and_return(true)
         allow_any_instance_of(Application).to receive(:get_policies_by_email).and_return([])
       end
 

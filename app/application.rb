@@ -59,19 +59,6 @@ class Application < Sinatra::Base
     }
   end
 
-  get '/login' do
-    erb :'../views/login', layout: :application,
-    locals: {
-      google_key: ENV['GOOGLE_KEY'],
-      csrf_token: request.env['rack.session']['csrf']
-    }
-  end
-
-  post '/logout' do
-    Session.expire_all(omniauth_auth_email)
-    redirect '/login'
-  end
-
   get '/new_policy' do
     erb :'../views/new_policy', layout: :application,
       locals: {
