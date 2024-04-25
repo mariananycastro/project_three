@@ -7,6 +7,7 @@ require_relative './requesters/policies_by_email_requester'
 require_relative './requesters/create_policy_requester'
 
 class Application < Sinatra::Base
+  EXPIRATE_AFTER = 1200 # seconds
   LOGIN_PATHS = %r{/(login|logout)}
   AUTH_CALLBACK_PATHS = %r{/(auth/[^/]+/(callback|failure))}
 
@@ -35,7 +36,7 @@ class Application < Sinatra::Base
     return if request.path =~ AUTH_CALLBACK_PATHS
     return if user_signed_in?
 
-        redirect '/login'
+    redirect '/login'
   end
 
   get '/' do

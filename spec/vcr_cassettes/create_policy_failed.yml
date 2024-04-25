@@ -15,6 +15,8 @@ http_interactions:
     headers:
       Content-Type:
       - application/json
+      Authorization:
+      - Bearer sometoken12345678901234567890
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
@@ -47,11 +49,11 @@ http_interactions:
       Cache-Control:
       - no-cache
       X-Request-Id:
-      - 3fa0bf39-cbee-493d-8980-1709fb939377
+      - e143d5ef-d096-4f27-b735-586ffba6cc2c
       X-Runtime:
-      - '0.005502'
+      - '0.006264'
       Server-Timing:
-      - start_processing.action_controller;dur=0.06, process_action.action_controller;dur=3.73
+      - start_processing.action_controller;dur=0.08, process_action.action_controller;dur=4.21
       Content-Length:
       - '15439'
     body:
@@ -59,7 +61,7 @@ http_interactions:
       string: '{"errors":[{"message":"Could not establish TCP connection to any of
         the configured hosts","backtrace":["/usr/local/bundle/gems/bunny-2.22.0/lib/bunny/session.rb:353:in
         `rescue in start''","/usr/local/bundle/gems/bunny-2.22.0/lib/bunny/session.rb:325:in
-        `start''","/app/app/services/bunny_connection_service.rb:4:in `publish_message''","/app/app/graphql/mutations/create_policy_mutation.rb:11:in
+        `start''","/app/app/services/bunny_connection_service.rb:8:in `publish_message''","/app/app/graphql/mutations/create_policy_mutation.rb:11:in
         `resolve''","/usr/local/bundle/gems/graphql-2.2.14/lib/graphql/schema/resolver.rb:107:in
         `public_send''","/usr/local/bundle/gems/graphql-2.2.14/lib/graphql/schema/resolver.rb:107:in
         `block (3 levels) in resolve_with_support''","/usr/local/bundle/gems/graphql-2.2.14/lib/graphql/execution/interpreter/runtime.rb:779:in
@@ -122,7 +124,7 @@ http_interactions:
         `execute_multiplex''","/usr/local/bundle/gems/graphql-2.2.14/lib/graphql/execution/interpreter.rb:37:in
         `run_all''","/usr/local/bundle/gems/graphql-2.2.14/lib/graphql/schema.rb:1297:in
         `multiplex''","/usr/local/bundle/gems/graphql-2.2.14/lib/graphql/schema.rb:1273:in
-        `execute''","/app/app/controllers/graphql_controller.rb:20:in `execute''","/usr/local/bundle/gems/actionpack-7.0.8.1/lib/action_controller/metal/basic_implicit_render.rb:6:in
+        `execute''","/app/app/controllers/graphql_controller.rb:12:in `execute''","/usr/local/bundle/gems/actionpack-7.0.8.1/lib/action_controller/metal/basic_implicit_render.rb:6:in
         `send_action''","/usr/local/bundle/gems/actionpack-7.0.8.1/lib/abstract_controller/base.rb:215:in
         `process_action''","/usr/local/bundle/gems/actionpack-7.0.8.1/lib/action_controller/metal/rendering.rb:165:in
         `process_action''","/usr/local/bundle/gems/actionpack-7.0.8.1/lib/abstract_controller/callbacks.rb:234:in
@@ -204,5 +206,5 @@ http_interactions:
         `handle_request''","/usr/local/bundle/gems/puma-5.6.8/lib/puma/server.rb:443:in
         `process_client''","/usr/local/bundle/gems/puma-5.6.8/lib/puma/thread_pool.rb:147:in
         `block in spawn_thread''"]}],"data":{}}'
-  recorded_at: Tue, 23 Apr 2024 16:50:04 GMT
+  recorded_at: Wed, 24 Apr 2024 21:31:09 GMT
 recorded_with: VCR 6.2.0
