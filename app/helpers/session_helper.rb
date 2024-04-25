@@ -1,6 +1,4 @@
 module SessionHelper
-  EXPIRATE_AFTER = 1200 # seconds
-
   def user_signed_in?
     if omniauth_auth_email
       current_session = Session.active_session(omniauth_auth_email)

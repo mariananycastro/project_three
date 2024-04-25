@@ -14,7 +14,7 @@ describe 'Application' do
         expect(session[:session_id]).not_to be_nil
         expect(session[:csrf]).not_to be_nil
 
-        expect(session_options[:expire_after]).to eq Application::EXPIRATE_AFTER
+        expect(session_options[:expire_after]).to eq Application::EXPIRES_SESSION
         expect(session_options[:httponly]).to be true
         expect(session_options[:secret]).to eq ENV['COOKIE_SECRET']
         expect(last_response).to be_redirect

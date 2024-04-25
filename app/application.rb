@@ -6,11 +6,13 @@ require_relative '../db/database'
 require_relative './requesters/policies_by_email_requester'
 require_relative './requesters/create_policy_requester'
 require_relative './helpers/session_helper'
+require_relative './controllers/auth_controller'
 
 class Application < Sinatra::Base
-  helpers SessionHelper 
+  helpers SessionHelper
+  use AuthController
 
-  EXPIRATE_AFTER = 1200 # seconds
+  EXPIRES_SESSION = 1200 # seconds
   LOGIN_PATHS = %r{/(login|logout)}
   AUTH_CALLBACK_PATHS = %r{/(auth/[^/]+/(callback|failure))}
 
@@ -27,7 +29,7 @@ class Application < Sinatra::Base
     use Rack::Session::Cookie,
       key: 'my_app_session',
       secret: ENV['COOKIE_SECRET'],
-      expire_after: EXPIRATE_AFTER
+      expire_after: EXPIRES_SESSION
   end
 
   use OmniAuth::Builder do
@@ -87,27 +89,5 @@ class Application < Sinatra::Base
     end
 
     redirect '/'
-  end
-
-  get '/auth/:provider/callback' do
-    content_type 'text/plain'
-
-    session[:omniauth_auth] = request.env['omniauth.auth'].to_hash
-    user_email = session[:omniauth_auth]['info']['email']
-
-    Session.expire_all(user_email)
-
-    Session.create(
-      session_id: session[:session_id],
-      email: user_email,
-      expires_at: EXPIRATE_AFTER.seconds.from_now
-    )
-
-    redirect '/'
-  end
-
-  get '/auth/:provider/failure' do
-    content_type 'text/plain'
-    'Failure -> callback error'
   end
 end
