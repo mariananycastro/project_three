@@ -341,7 +341,7 @@ describe 'Application' do
 
           expect(last_response).to be_redirect
           follow_redirect!
-          
+
           expect(last_request.path).to eq('/')
         end
 
@@ -355,7 +355,7 @@ describe 'Application' do
           follow_redirect!
 
           flash_message = last_request.env['rack.session.unpacked_cookie_data']['flash']
-          
+
           expect(flash_message[:success]).to eq('Policy successfully created!')
         end
       end
@@ -370,7 +370,7 @@ describe 'Application' do
 
           expect(last_response).to be_redirect
           follow_redirect!
-          
+
           expect(last_request.path).to eq('/')
         end
 
@@ -383,7 +383,7 @@ describe 'Application' do
 
           follow_redirect!
           flash_message = last_request.env['rack.session.unpacked_cookie_data']['flash']
-          
+
           expect(flash_message[:failed]).to eq('Policy not created! Try again later')
         end
       end
