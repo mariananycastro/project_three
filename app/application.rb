@@ -5,8 +5,11 @@ require 'omniauth-google-oauth2'
 require_relative '../db/database'
 require_relative './requesters/policies_by_email_requester'
 require_relative './requesters/create_policy_requester'
+require_relative './helpers/session_helper'
 
 class Application < Sinatra::Base
+  helpers SessionHelper 
+
   EXPIRATE_AFTER = 1200 # seconds
   LOGIN_PATHS = %r{/(login|logout)}
   AUTH_CALLBACK_PATHS = %r{/(auth/[^/]+/(callback|failure))}
@@ -106,18 +109,5 @@ class Application < Sinatra::Base
   get '/auth/:provider/failure' do
     content_type 'text/plain'
     'Failure -> callback error'
-  end
-
-  def user_signed_in?
-    if omniauth_auth_email
-      current_session = Session.active_session(omniauth_auth_email)
-      return true if current_session && current_session.session_id_correct?(session[:session_id])
-    end
-
-    false
-  end
-
-  def omniauth_auth_email
-    session.dig(:omniauth_auth, 'info', 'email')
   end
 end
