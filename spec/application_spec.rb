@@ -292,7 +292,6 @@ describe 'Application' do
         effective_until: '2025-04-24',
         name: 'Maria Silva',
         document: '222.222.222-22',
-        email: 'maria@email.com',
         vehicle_brand: 'Super top',
         vehicle_model: 'Novo modelo',
         year: '2020',
@@ -328,7 +327,6 @@ describe 'Application' do
 
       before do
         allow_any_instance_of(SessionHelper).to receive(:user_signed_in?).and_return(true)
-        allow_any_instance_of(Application).to receive(:get_policies_by_email).and_return([])
       end
 
       context 'when request succed' do

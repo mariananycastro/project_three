@@ -1,11 +1,15 @@
-require_relative '../helpers/session_helper'
+require 'omniauth'
+require 'omniauth-google-oauth2'
 require_relative '../../db/database'
+require_relative 'base_controller'
 
-class AuthController < Sinatra::Base
-  include SessionHelper
+class AuthController < BaseController
+  use OmniAuth::Builder do
+    provider :google_oauth2, ENV['GOOGLE_KEY'], ENV['GOOGLE_SECRET'], scope: 'email'
+  end
 
   get '/login' do
-    erb :'../views/login', layout: :application,
+    erb :login, layout: :application,
     locals: {
       google_key: ENV['GOOGLE_KEY'],
       csrf_token: request.env['rack.session']['csrf']
