@@ -155,6 +155,7 @@ DEPENDENCIES
   jwt
   omniauth-cognito-idp
   omniauth-google-oauth2
+  omniauth-oauth2
   pry
   pry-byebug
   puma
