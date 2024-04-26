@@ -329,7 +329,7 @@ describe 'Application' do
         allow_any_instance_of(SessionHelper).to receive(:user_signed_in?).and_return(true)
       end
 
-      context 'when request succed' do
+      context 'when request succeed' do
         it 'redirects to home' do
           VCR.use_cassette('create_policy') do
             callback_request
@@ -339,7 +339,7 @@ describe 'Application' do
 
           expect(last_response).to be_redirect
           follow_redirect!
-          
+
           expect(last_request.path).to eq('/')
         end
 
@@ -353,7 +353,7 @@ describe 'Application' do
           follow_redirect!
 
           flash_message = last_request.env['rack.session.unpacked_cookie_data']['flash']
-          
+
           expect(flash_message[:success]).to eq('Policy successfully created!')
         end
       end
@@ -368,7 +368,7 @@ describe 'Application' do
 
           expect(last_response).to be_redirect
           follow_redirect!
-          
+
           expect(last_request.path).to eq('/')
         end
 
@@ -381,7 +381,7 @@ describe 'Application' do
 
           follow_redirect!
           flash_message = last_request.env['rack.session.unpacked_cookie_data']['flash']
-          
+
           expect(flash_message[:failed]).to eq('Policy not created! Try again later')
         end
       end
