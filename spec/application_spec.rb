@@ -14,7 +14,7 @@ describe 'Application' do
         expect(session[:session_id]).not_to be_nil
         expect(session[:csrf]).not_to be_nil
 
-        expect(session_options[:expire_after]).to eq Application::EXPIRES_SESSION
+        expect(session_options[:expire_after]).to eq Application::EXPIRATE_AFTER
         expect(session_options[:httponly]).to be true
         expect(session_options[:secret]).to eq ENV['COOKIE_SECRET']
         expect(last_response).to be_redirect
@@ -246,7 +246,7 @@ describe 'Application' do
     let(:email) { 'maria@email.com' }
 
     it 'expires all sessions from email'do
-      allow_any_instance_of(SessionHelper).to receive(:omniauth_auth_email).and_return(email)
+      allow_any_instance_of(Application).to receive(:omniauth_auth_email).and_return(email)
       allow(Session).to receive(:expire_all)
 
       post '/logout'
@@ -264,8 +264,8 @@ describe 'Application' do
       let(:email) { 'maria@email.com' }
 
       it 'show create policy form' do
-        allow_any_instance_of(SessionHelper).to receive(:omniauth_auth_email).and_return(email)
-        allow_any_instance_of(SessionHelper).to receive(:user_signed_in?).and_return(true)
+        allow_any_instance_of(Application).to receive(:omniauth_auth_email).and_return(email)
+        allow_any_instance_of(Application).to receive(:user_signed_in?).and_return(true)
 
         get '/new_policy'
 
@@ -292,6 +292,7 @@ describe 'Application' do
         effective_until: '2025-04-24',
         name: 'Maria Silva',
         document: '222.222.222-22',
+        email: 'maria@email.com',
         vehicle_brand: 'Super top',
         vehicle_model: 'Novo modelo',
         year: '2020',
@@ -326,10 +327,11 @@ describe 'Application' do
       end
 
       before do
-        allow_any_instance_of(SessionHelper).to receive(:user_signed_in?).and_return(true)
+        allow_any_instance_of(Application).to receive(:user_signed_in?).and_return(true)
+        allow_any_instance_of(Application).to receive(:get_policies_by_email).and_return([])
       end
 
-      context 'when request succeed' do
+      context 'when request succed' do
         it 'redirects to home' do
           VCR.use_cassette('create_policy') do
             callback_request

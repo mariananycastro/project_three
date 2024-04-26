@@ -69,9 +69,6 @@ GEM
       hashie (>= 3.4.6)
       rack (>= 2.2.3)
       rack-protection
-    omniauth-cognito-idp (0.1.1)
-      jwt
-      omniauth-oauth2
     omniauth-google-oauth2 (1.1.2)
       jwt (>= 2.0)
       oauth2 (~> 2.0)
@@ -153,9 +150,7 @@ DEPENDENCIES
   database_cleaner
   dotenv
   jwt
-  omniauth-cognito-idp
   omniauth-google-oauth2
-  omniauth-oauth2
   pry
   pry-byebug
   puma
