@@ -4,7 +4,7 @@ require_relative 'base_controller'
 
 class HomeController < BaseController
   get '/' do
-    redirect '/login' if !user_signed_in?
+    redirect '/login' unless user_signed_in?
 
     policies = PolicyByEmailRequester.execute(omniauth_auth_email)
 

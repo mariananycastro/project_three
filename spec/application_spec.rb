@@ -329,7 +329,7 @@ describe 'Application' do
         allow_any_instance_of(SessionHelper).to receive(:user_signed_in?).and_return(true)
       end
 
-      context 'when request succed' do
+      context 'when request succeed' do
         it 'redirects to home' do
           VCR.use_cassette('create_policy') do
             callback_request
