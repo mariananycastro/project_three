@@ -11,6 +11,7 @@ gem 'sinatra-activerecord'
 gem 'sqlite3'
 gem 'sinatra-flash'
 gem 'jwt'
+gem 'omniauth-cognito-idp'
 
 group :development, :test do
   gem 'pry'

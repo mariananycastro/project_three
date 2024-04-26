@@ -4,3 +4,11 @@
     <button type='submit'>Login with Google</button>
   </form>
 </div>
+
+<div class="button is-light">
+  <form method='post' action='/auth/cognito_idp'>
+    <input type="hidden" name="authenticity_token" value="<%= csrf_token %>">
+    <button type='submit'>Login with Cognito IDP</button>
+  </form>
+</div>
+
