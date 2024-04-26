@@ -12,3 +12,9 @@
   </form>
 </div>
 
+<div class="button is-light">
+  <form method='post' action='/auth/cognito-idp'>
+    <input type="hidden" name="authenticity_token" value="<%= csrf_token %>">
+    <button type='submit'>Login with Cognito na mão</button>
+  </form>
+</div>

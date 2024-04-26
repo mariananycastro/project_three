@@ -3,6 +3,7 @@ require 'omniauth-google-oauth2'
 require_relative '../../db/database'
 require_relative 'base_controller'
 require 'omniauth-cognito-idp'
+require_relative '../omniauth/strategies/cognito'
 
 class AuthController < BaseController
   use OmniAuth::Builder do
@@ -14,6 +15,7 @@ class AuthController < BaseController
       name: 'cognito_idp',
       scope: 'email openid'
 
+    provider :cognito, ENV['COGNITO_CLIENT_ID'], ENV['COGNITO_CLIENT_SECRET'], scope: 'email openid'
   end
 
   get '/login' do
