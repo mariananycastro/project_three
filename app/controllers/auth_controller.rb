@@ -2,10 +2,20 @@ require 'omniauth'
 require 'omniauth-google-oauth2'
 require_relative '../../db/database'
 require_relative 'base_controller'
+require 'omniauth-cognito-idp'
+require_relative '../omniauth/strategies/cognito'
 
 class AuthController < BaseController
   use OmniAuth::Builder do
     provider :google_oauth2, ENV['GOOGLE_KEY'], ENV['GOOGLE_SECRET'], scope: 'email'
+    provider :cognito_idp, ENV['COGNITO_CLIENT_ID'], ENV['COGNITO_CLIENT_SECRET'],
+      client_options: {
+        site: ENV['COGNITO_USER_POOL_SITE']
+      },
+      name: 'cognito_idp',
+      scope: 'email openid'
+
+    provider :cognito, ENV['COGNITO_CLIENT_ID'], ENV['COGNITO_CLIENT_SECRET'], scope: 'email openid'
   end
 
   get '/login' do
@@ -24,7 +34,10 @@ class AuthController < BaseController
   get '/auth/:provider/callback' do
     content_type 'text/plain'
 
-    session[:omniauth_auth] = request.env['omniauth.auth'].to_hash
+    omniauth_hash = request.env['omniauth.auth'].to_hash
+    omniauth_info = omniauth_hash.reject {|k| k == 'credentials' || k == 'extra' }
+
+    session[:omniauth_auth] = omniauth_info
     user_email = session[:omniauth_auth]['info']['email']
 
     Session.expire_all(user_email)
