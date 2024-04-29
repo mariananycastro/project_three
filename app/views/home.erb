@@ -14,15 +14,31 @@
   <% if policies.length > 0 %>
   <% policies.each do |policy| %>
     <tr>
-        <td><%= policy[:insuredPerson][:name] %></td>
-        <td><%= policy[:insuredPerson][:document] %></td>
-        <td><%= policy[:insuredPerson][:email] %></td>
-        <td><%= policy[:vehicle][:brand] %> <%= policy[:vehicle][:model] %></td>
-        <td><%= policy[:vehicle][:vehicleModel] %></td>
-        <td><%= policy[:vehicle][:year] %></td>
-        <td><%= policy[:vehicle][:licensePlate] %></td>
-        <td><%= policy[:effectiveFrom] %></td>
-        <td><%= policy[:effectiveUntil] %></td>
+      <% if policy[:insuredPerson] %>
+        <td><%= policy[:insuredPerson][:name] || 'N/A' %></td>
+        <td><%= policy[:insuredPerson][:document] || 'N/A' %></td>
+        <td><%= policy[:insuredPerson][:email] || 'N/A' %></td>
+      <% else %>
+        <td> N/A </td>
+        <td> N/A </td>
+        <td> N/A </td>
+      <% end %>
+
+      <% if policy[:vehicle] %>
+        <td><%= policy[:vehicle][:brand] || 'N/A' %></td>
+        <td><%= policy[:vehicle][:vehicleModel] || 'N/A' %></td>
+        <td><%= policy[:vehicle][:year] || 'N/A' %></td>
+        <td><%= policy[:vehicle][:licensePlate] || 'N/A' %></td>
+      <% else %>
+        <td> N/A </td>
+        <td> N/A </td>
+        <td> N/A </td>
+        <td> N/A </td>
+        <td> N/A </td>
+      <% end %>
+
+        <td><%= policy[:effectiveFrom] || 'N/A' %></td>
+        <td><%= policy[:effectiveUntil] || 'N/A' %></td>
       <% end %>
     </tr>
     <% else %>
