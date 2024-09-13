@@ -10,7 +10,7 @@ class PolicyByEmailRequester
   def execute
     response = graphql_request
     policies = JSON.parse(response).deep_symbolize_keys
-  
+
     return if policies[:errors]
 
     policies[:data][:policiesByEmailQuery]
@@ -24,6 +24,7 @@ class PolicyByEmailRequester
         policiesByEmailQuery(email: "#{params}") {
           effectiveFrom
           effectiveUntil
+          status
           insuredPerson {
             name
             email
@@ -34,6 +35,11 @@ class PolicyByEmailRequester
             vehicleModel
             year
             licensePlate
+          }
+          payment {
+            status
+            link
+            price
           }
         }
       }
