@@ -13,6 +13,8 @@ gem 'sinatra-flash'
 gem 'jwt'
 gem 'omniauth-cognito-idp'
 gem 'omniauth-oauth2'
+gem 'faye-websocket'
+gem 'jwt'
 
 group :development, :test do
   gem 'pry'
@@ -21,4 +23,8 @@ group :development, :test do
   gem 'database_cleaner'
   gem 'webmock'
   gem 'vcr'
+end
+
+group :test do
+  gem 'rack-test'
 end
