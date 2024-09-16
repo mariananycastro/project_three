@@ -19,11 +19,22 @@ class HomeController < BaseController
       return erb :home, layout: :application,
         locals: {
           policies: policies,
-          email: omniauth_auth_email
+          email: omniauth_auth_email,
+          token: token,
+          error: false
         }
     end
 
     erb :'generic_error', layout: :application,
-      locals: { email: omniauth_auth_email }
+      locals: {
+        email: omniauth_auth_email,
+        error: true
+      }
+  end
+
+  private
+
+  def token
+    JwtHelper.encode({ email: omniauth_auth_email })
   end
 end

@@ -64,3 +64,9 @@
     </tr>
   <% end %>
 </table>
+<% unless error %>
+  <script>
+    window.token = "<%= token %>";
+  </script>
+  <script src="/scripts/index.js"></script>
+<% end %>
