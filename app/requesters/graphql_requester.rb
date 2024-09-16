@@ -38,7 +38,7 @@ module GraphqlRequester
 
   def token
     expiration_time = Time.now.to_i + EXPIRATE_TOKEN
-    jwt_token = JWT.encode({ exp: expiration_time }, ENV['JWT_SECRET'], ENV['JWT_ALGORITHM'])
+    jwt_token = JWT.encode({ exp: expiration_time }, ENV['JWT_SECRET_GRAPHQL'], ENV['JWT_ALGORITHM'])
 
     "Bearer #{jwt_token}"
   end

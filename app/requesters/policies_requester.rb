@@ -10,7 +10,7 @@ class PoliciesRequester
   def execute
     response = graphql_request
     policies = JSON.parse(response).deep_symbolize_keys
-  
+
     return policies[:data][:policiesQuery] if policies[:data]
   end
 
@@ -22,6 +22,7 @@ class PoliciesRequester
         policiesQuery {
           effectiveFrom
           effectiveUntil
+          status
           insuredPerson {
             name
             email
@@ -32,6 +33,11 @@ class PoliciesRequester
             vehicleModel
             year
             licensePlate
+          }
+          payment {
+            status
+            link
+            price
           }
         }
       }
