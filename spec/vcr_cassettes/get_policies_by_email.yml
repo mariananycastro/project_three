@@ -6,9 +6,10 @@ http_interactions:
     body:
       encoding: UTF-8
       string: '{"query":"      query {\n        policiesByEmailQuery(email: \"maria@email.com\")
-        {\n          effectiveFrom\n          effectiveUntil\n          insuredPerson
+        {\n          effectiveFrom\n          effectiveUntil\n          status\n          insuredPerson
         {\n            name\n            email\n            document\n          }\n          vehicle
-        {\n            brand\n            vehicleModel\n            year\n            licensePlate\n          }\n        }\n      }\n"}'
+        {\n            brand\n            vehicleModel\n            year\n            licensePlate\n          }\n          payment
+        {\n            status\n            link\n            price\n          }\n        }\n      }\n"}'
     headers:
       Content-Type:
       - application/json
@@ -44,23 +45,22 @@ http_interactions:
       Vary:
       - Accept
       Etag:
-      - W/"cafb1a79aca69030fd302316a7f3ab77"
+      - W/"a08659348776b496517dc063e9a4643c"
       Cache-Control:
       - max-age=0, private, must-revalidate
       X-Request-Id:
-      - 6e731727-610b-4f55-a7ca-e6b9f3032990
+      - 6b736973-0840-47b0-9a20-cead2ff07aca
       X-Runtime:
-      - '0.015054'
+      - '0.035943'
       Server-Timing:
-      - start_processing.action_controller;dur=0.06, process_action.action_controller;dur=13.16
+      - start_processing.action_controller;dur=0.15, process_action.action_controller;dur=32.95
       Content-Length:
-      - '529'
+      - '1437'
     body:
       encoding: UTF-8
-      string: '{"data":{"policiesByEmailQuery":[{"effectiveFrom":"2024-03-19","effectiveUntil":"2025-03-19","insuredPerson":{"name":"Maria
-        Silva","email":"maria@email.com","document":"123.456.789-00"},"vehicle":{"brand":"Volkswagen","vehicleModel":"Gol
-        1.6","year":2022,"licensePlate":"ABC-5678"}},{"effectiveFrom":"2024-03-19","effectiveUntil":"2026-03-19","insuredPerson":{"name":"Maria
-        Silva","email":"maria@email.com","document":"123.456.789-00"},"vehicle":{"brand":"Fiat","vehicleModel":"Uno
-        1.0","year":1996,"licensePlate":"ABC-1234"}}]}}'
-  recorded_at: Wed, 24 Apr 2024 21:21:08 GMT
+      string: '{"data":{"policiesByEmailQuery":[{"effectiveFrom":"2024-03-19","effectiveUntil":"2025-03-19","status":"draft","insuredPerson":{"name":"Maria
+        Silva","email":"maria@email.com","document":"123.456.789-00"},"vehicle":{"brand":"Volkswagen","vehicleModel":"Gol 1.6","year":2022,"licensePlate":"ABC-5678"},"payment":{"status":"pending","link":"https://checkout.stripe.com/c/pay/cs_testd,"price":1000.0}},{"effectiveFrom":"2024-01-02","effectiveUntil":"2025-01-02","status":"draft","insuredPerson":{"name":"Maria
+        Silva","email":"maria@email.com","document":"123.456.789-00"},"vehicle":{"brand":"Bolinha","vehicleModel":"Bolinha
+        Movel","year":2025,"licensePlate":"ABC5678"},"payment":{"status":"pending","link":"https://checkout.stripe.com/c/pay/cs_testl","price":2000.0}}]}}'
+  recorded_at: Fri, 13 Sep 2024 18:44:55 GMT
 recorded_with: VCR 6.2.0

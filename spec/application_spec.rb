@@ -3,7 +3,7 @@ require 'pry'
 require 'bcrypt'
 
 describe 'Application' do
-  describe 'route get' do
+  context 'route get' do
     context 'cookies' do
       it 'are configurated' do
         get '/'
@@ -74,6 +74,7 @@ describe 'Application' do
 
                   expect(last_response.body).to include('2024-03-19')
                   expect(last_response.body).to include('2025-03-19')
+                  expect(last_response.body).to include('draft')
                   expect(last_response.body).to include('Maria Silva')
                   expect(last_response.body).to include('maria@email.com')
                   expect(last_response.body).to include('123.456.789-00')
@@ -81,6 +82,8 @@ describe 'Application' do
                   expect(last_response.body).to include('Gol 1.6')
                   expect(last_response.body).to include('2022')
                   expect(last_response.body).to include('ABC-5678')
+                  expect(last_response.body).to include('pending')
+                  expect(last_response.body).to include('1000.0')
                 end
               end
             end
@@ -151,6 +154,106 @@ describe 'Application' do
             Session.last.update!(expires_at: 1.day.ago)
           end
           let(:user_email) { 'maria@email.com' }
+
+          it 'redirects to /login' do
+            callback_request
+            expires_last_session
+            follow_redirect!
+
+            expect(last_response).to be_redirect
+
+            follow_redirect!
+
+            expect(Session.active_session(user_email)).to eq(nil)
+            expect(last_request.path).to eq('/login')
+          end
+        end
+      end
+
+      context 'with cognito' do
+        let(:user_email) { 'john_silva@example.com' }
+        let(:user_password) { 'admin1234' }
+        let(:cognito_idp_response) do
+          OmniAuth.config.test_mode = true
+
+          OmniAuth.config.mock_auth[:cognito_idp] = OmniAuth::AuthHash.new({
+            provider: 'cognito_idp',
+            uid: '111111111',
+            info: { email: user_email }
+          })
+        end
+        let(:authenticated_session_id) { 'authenticated_session_id' }
+        let(:callback_request) do
+          get '/auth/cognito_idp/callback',
+            { username: user_email, password: user_password },
+            {
+              'rack.session' => { 'session_id' => authenticated_session_id },
+              'omniauth.auth' => cognito_idp_response
+            }
+        end
+
+        context 'when user has active session' do
+          let(:update_last_session) do
+            last_session = Session.last
+            new_session_id = BCrypt::Password.create(current_session_id)
+            Session.last.update!(session_id_digest: new_session_id)
+          end
+
+          context 'with session_id equal from current session_id' do
+            let(:current_session_id) { authenticated_session_id }
+
+            context 'when returns policies from many users' do
+              it 'Display policies info' do
+                VCR.use_cassette('get_all_policies') do
+                  callback_request
+                  update_last_session
+                  follow_redirect!
+
+                  expect(last_response.body).to include('draft')
+                  expect(last_response.body).to include('Bolinha Silva')
+                  expect(last_response.body).to include('email@email.com.br')
+                  expect(last_response.body).to include('111.111.111-11')
+                  expect(last_response.body).to include('Bolinha Movel')
+
+                  expect(last_response.body).to include('active')
+                  expect(last_response.body).to include('Maria Silva')
+                  expect(last_response.body).to include('user_email@email.com')
+                  expect(last_response.body).to include('222.222.222-22')
+                  expect(last_response.body).to include('Novo modelo')
+                end
+              end
+            end
+          end
+
+          context 'with session_id different from current session_id' do
+            let(:current_session_id) { 'another_session_id' }
+
+            it 'redirects to /login' do
+              expect_any_instance_of(Session)
+                .to receive(:session_id_correct?)
+                .and_return(false)
+
+              callback_request
+              update_last_session
+              follow_redirect!
+
+              expect(last_response).to be_redirect
+
+              follow_redirect!
+
+              expect(last_request.path).to eq('/login')
+              expect(last_response.body).to include('Login')
+              expect(last_response.body).to include('Login with Google')
+              expect(last_response.body).not_to include("Logged in as: #{user_email}")
+            end
+          end
+        end
+
+        context 'when user does NOT have active session' do
+          let(:expires_last_session) do
+            last_session = Session.last
+            Session.last.update!(expires_at: 1.day.ago)
+          end
 
           it 'redirects to /login' do
             callback_request
@@ -383,6 +486,155 @@ describe 'Application' do
           flash_message = last_request.env['rack.session.unpacked_cookie_data']['flash']
 
           expect(flash_message[:failed]).to eq('Policy not created! Try again later')
+        end
+      end
+    end
+  end
+
+  context 'route get /connect' do
+    context 'when request does not autenticate' do
+      context 'when token in invalid' do
+        it 'does not create a websocket connection' do
+          allow(WebsocketHelper).to receive(:connect)
+
+          get '/connect', { token: 'invalid-token' }
+
+          expect(WebsocketHelper).not_to have_received(:connect)
+          expect(last_response.status).to eq(400)
+        end
+      end
+
+      context 'when does not send token' do
+        it 'does not create a websocket connection' do
+          allow(WebsocketHelper).to receive(:connect)
+
+          get '/connect'
+
+          expect(WebsocketHelper).not_to have_received(:connect)
+          expect(last_response.status).to eq(400)
+        end
+      end
+    end
+
+    context 'when request autenticates' do
+      it 'creates a websocket connection' do
+        valid_token = { token: 'valid_token' }
+        allow(JwtHelper).to receive(:decode).and_return(valid_token)
+        allow(WebsocketHelper).to receive(:connect).and_return(true)
+
+        get '/connect', valid_token
+
+        expect(JwtHelper).to have_received(:decode).with(valid_token[:token])
+        expect(WebsocketHelper).to have_received(:connect)
+        expect(last_response.status).to eq(200)
+      end
+    end
+  end
+
+  context 'route post /broadcast' do
+    let(:broadcast_email) { 'broadcast_email@example.com' }
+    let(:valid_body) do
+      {
+        email: broadcast_email,
+        id: '12345',
+        status: 'active'
+      }.to_json
+    end
+
+    context 'when request does not autenticate' do
+      context 'when does not send token' do
+        it 'does not send message' do
+          allow(WebsocketHelper).to receive(:broadcast)
+
+          post '/broadcast', valid_body
+
+          expect(WebsocketHelper).not_to have_received(:broadcast)
+          expect(last_response.status).to eq(400)
+        end
+      end
+
+      context 'when does not send valid token' do
+        it 'does not send message' do
+          allow(WebsocketHelper).to receive(:broadcast)
+
+          env = { 'CONTENT_TYPE' => 'application/json', 'HTTP_AUTHORIZATION' => "Bearer invalid_token" }
+          post '/broadcast', valid_body, env
+
+          expect(WebsocketHelper).not_to have_received(:broadcast)
+          expect(last_response.status).to eq(400)
+        end
+      end
+    end
+
+    context 'when request is authenticated' do
+      let(:cognito_client) do
+        instance_double('Faye::WebSocket', env: {
+          'rack.session' => {
+            'omniauth_auth' => {
+              'provider' => 'cognito_idp',
+              'info' => { 'email' => 'user1@example.com' }
+            }
+          }
+        })
+      end
+      let(:same_email_client) do
+        instance_double('Faye::WebSocket', env: {
+          'rack.session' => {
+            'omniauth_auth' => {
+              'provider' => 'google_oauth2',
+              'info' => { 'email' => broadcast_email }
+            }
+          }
+        })
+      end
+      let(:another_email_client) do
+        instance_double('Faye::WebSocket', env: {
+          'rack.session' => {
+            'omniauth_auth' => {
+              'provider' => 'google_oauth2',
+              'info' => { 'email' => 'another_email@email.com' }
+            }
+          }
+        })
+      end
+      let(:clients_list) { [cognito_client, same_email_client, another_email_client] }
+      let(:valid_token) { { token: 'valid_token' } }
+
+      let(:mock_client) do
+        instance_double(Faye::WebSocket::Client, env: {
+          'rack.session' => {
+            'omniauth_auth' => {
+              'provider' => 'cognito-idp',
+              'info' => { 'email' => 'test@example.com' }
+            }
+          }
+        })
+      end
+
+      context 'when sends a websocket message' do
+        it 'broadcast message' do
+          allow(WebsocketHelper).to receive(:broadcast)
+          allow(JwtHelper).to receive(:decode).and_return(valid_token)
+
+          env = { 'CONTENT_TYPE' => 'application/json', 'HTTP_AUTHORIZATION' => "Bearer valid_token" }
+          post '/broadcast', valid_body, env
+
+          expect(WebsocketHelper).to have_received(:broadcast)
+          expect(last_response.status).to eq(200)
+        end
+
+        it 'and sends message to all cognito selected clients' do
+          allow(WebsocketHelper).to receive(:broadcast)
+          allow(JwtHelper).to receive(:decode).and_return(valid_token)
+          allow(WebsocketController).to receive(:clients).and_return(clients_list)
+
+          env = { 'CONTENT_TYPE' => 'application/json', 'HTTP_AUTHORIZATION' => "Bearer valid_token" }
+          post '/broadcast', valid_body, env
+
+          selected_clients = [cognito_client, same_email_client]
+
+          expect(last_response.status).to eq(200)
+          expect(WebsocketHelper).to have_received(:broadcast).with(selected_clients, valid_body)
         end
       end
     end
