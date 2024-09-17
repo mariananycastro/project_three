@@ -1,0 +1,64 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: http://app-two:4000/graphql
+    body:
+      encoding: UTF-8
+      string: '{"query":"      query {\n        policiesQuery {\n          effectiveFrom\n          effectiveUntil\n          status\n          insuredPerson
+        {\n            name\n            email\n            document\n          }\n          vehicle
+        {\n            brand\n            vehicleModel\n            year\n            licensePlate\n          }\n          payment
+        {\n            status\n            link\n            price\n          }\n        }\n      }\n"}'
+    headers:
+      Content-Type:
+      - application/json
+      Authorization:
+      - Bearer sometoken12345678901234567890
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Host:
+      - app-two:4000
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - '0'
+      X-Content-Type-Options:
+      - nosniff
+      X-Download-Options:
+      - noopen
+      X-Permitted-Cross-Domain-Policies:
+      - none
+      Referrer-Policy:
+      - strict-origin-when-cross-origin
+      Content-Type:
+      - application/json; charset=utf-8
+      Vary:
+      - Accept
+      Etag:
+      - W/"da5d56d656b8b3442bd022b81104c6cf"
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      X-Request-Id:
+      - b73ff07e-4acf-4a61-be89-2e4e9038e636
+      X-Runtime:
+      - '0.040380'
+      Server-Timing:
+      - start_processing.action_controller;dur=0.11, process_action.action_controller;dur=37.57
+      Content-Length:
+      - '2122'
+    body:
+      encoding: UTF-8
+      string: '{"data":{"policiesQuery":[{"effectiveFrom":"2024-01-01","effectiveUntil":"2025-01-01","status":"draft","insuredPerson":{"name":"Bolinha
+        Silva","email":"email@email.com.br","document":"111.111.111-11"},"vehicle":{"brand":"Bolinha","vehicleModel":"Bolinha
+        Movel","year":2024,"licensePlate":"ABC1234"},"payment":{"status":"pending","link":"https://checkout.stripe.com/c/pay/cs_test_a1ijoqavaonbXP2MCQhSoRBhWM2KAzXEIXSXsgjDrpqeGAdlenNdeG3KT2#fidkdWxOYHwnPyd1blpxYHZxWjA0VURyYEtGUTR3Vk5AdUNfTHVCNlJ8cUp3M1ZBZkA3TXdmYElRZ299SWtWbGhyXXZ1R1xUbn9%2FX0JTb2p2TmI1dmBLSXBOcEhmTkg8S2RRdE1wcH82Mm1XNTVzbFxoQzVTcycpJ2N3amhWYHdzYHcnP3F3cGApJ2lkfGpwcVF8dWAnPyd2bGtiaWBabHFgaCcpJ2BrZGdpYFVpZGZgbWppYWB3dic%2FcXdwYHgl","price":1000.0}},{"effectiveFrom":"2024-04-23","effectiveUntil":"2025-04-24","status":"active","insuredPerson":{"name":"Maria Silva","email":"user_email@email.com","document":"222.222.222-22"},"vehicle":{"brand":"Super top","vehicleModel":"Novo modelo","year":2020,"licensePlate":"ASD-0988"},"payment":{"status":"pending","link":"https://checkout.stripe.com/c/pay/cs_test_a1IfWBhj3IvRh1tfqUnHCcC9DjDPLiiPHwdgCpnQJplPL2d4sn15Hlerlf#fidkdWxOYHwnPyd1blpxYHZxWjA0VURyYEtGUTR3Vk5AdUNfTHVCNlJ8cUp3M1ZBZkA3TXdmYElRZ299SWtWbGhyXXZ1R1xUbn9%2FX0JTb2p2TmI1dmBLSXBOcEhmTkg8S2RRdE1wcH82Mm1XNTVzbFxoQzVTcycpJ2N3amhWYHdzYHcnP3F3cGApJ2lkfGpwcVF8dWAnPyd2bGtiaWBabHFgaCcpJ2BrZGdpYFVpZGZgbWppYWB3dic%2FcXdwYHgl","price":1000.0}}]}}'
+  recorded_at: Fri, 13 Sep 2024 20:49:59 GMT
+recorded_with: VCR 6.2.0

@@ -1,10 +1,10 @@
 require 'sinatra'
 require 'omniauth'
 require 'omniauth-google-oauth2'
-require_relative './helpers/session_helper'
 require_relative './controllers/auth_controller'
 require_relative './controllers/policies_controller'
 require_relative './controllers/home_controller'
+require_relative './controllers/websocket_controller'
 
 class Application < Sinatra::Base
   EXPIRES_SESSION = 1200 # seconds
@@ -23,7 +23,7 @@ class Application < Sinatra::Base
       expire_after: EXPIRES_SESSION
   end
 
-  helpers SessionHelper
+  use WebsocketController
 
   use HomeController
   use AuthController

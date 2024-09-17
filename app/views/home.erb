@@ -8,42 +8,65 @@
     <th>Vehicle Model</th>
     <th>Vehicle Year</th>
     <th>Vehicle Plate</th>
+    <th>Payment Status</th>
+    <th>Payment Price</th>
+    <th>Policy Status from</th>
     <th>Effective from</th>
     <th>Effective Until</th>
   </tr>
   <% if policies.length > 0 %>
-  <% policies.each do |policy| %>
-    <tr>
-      <% if policy[:insuredPerson] %>
-        <td><%= policy[:insuredPerson][:name] || 'N/A' %></td>
-        <td><%= policy[:insuredPerson][:document] || 'N/A' %></td>
-        <td><%= policy[:insuredPerson][:email] || 'N/A' %></td>
-      <% else %>
-        <td> N/A </td>
-        <td> N/A </td>
-        <td> N/A </td>
-      <% end %>
+    <% policies.each do |policy| %>
+      <tr>
+        <% if policy[:insuredPerson] %>
+          <td><%= policy[:insuredPerson][:name] || 'N/A' %></td>
+          <td><%= policy[:insuredPerson][:document] || 'N/A' %></td>
+          <td><%= policy[:insuredPerson][:email] || 'N/A' %></td>
+        <% else %>
+          <td> N/A </td>
+          <td> N/A </td>
+          <td> N/A </td>
+        <% end %>
 
-      <% if policy[:vehicle] %>
-        <td><%= policy[:vehicle][:brand] || 'N/A' %></td>
-        <td><%= policy[:vehicle][:vehicleModel] || 'N/A' %></td>
-        <td><%= policy[:vehicle][:year] || 'N/A' %></td>
-        <td><%= policy[:vehicle][:licensePlate] || 'N/A' %></td>
-      <% else %>
-        <td> N/A </td>
-        <td> N/A </td>
-        <td> N/A </td>
-        <td> N/A </td>
-        <td> N/A </td>
-      <% end %>
+        <% if policy[:vehicle] %>
+          <td><%= policy[:vehicle][:brand] || 'N/A' %></td>
+          <td><%= policy[:vehicle][:vehicleModel] || 'N/A' %></td>
+          <td><%= policy[:vehicle][:year] || 'N/A' %></td>
+          <td><%= policy[:vehicle][:licensePlate] || 'N/A' %></td>
+        <% else %>
+          <td> N/A </td>
+          <td> N/A </td>
+          <td> N/A </td>
+          <td> N/A </td>
+          <td> N/A </td>
+        <% end %>
 
+        <% if policy[:payment] %>
+          <td id="<%= "#{policy[:vehicle][:licensePlate]}-payment-status" %>">
+            <%= policy[:payment][:status] || 'N/A' %>
+          </td>
+          <td><%= policy[:payment][:price] || 'N/A' %></td>
+        <% else %>
+          <td> N/A </td>
+          <td> N/A </td>
+          <td> N/A </td>
+        <% end %>
+
+        <td id="<%= "#{policy[:vehicle][:licensePlate]}-policy-status" %>">
+          <%= policy[:status] || 'N/A' %>
+        </td>
         <td><%= policy[:effectiveFrom] || 'N/A' %></td>
         <td><%= policy[:effectiveUntil] || 'N/A' %></td>
-      <% end %>
-    </tr>
-    <% else %>
-      <tr>
-        <td> No policies </td>
       </tr>
     <% end %>
+  <% else %>
+    <tr>
+      <td> No policies </td>
+    </tr>
+  <% end %>
 </table>
+<% unless error %>
+  <script>
+    window.token = "<%= token %>";
+  </script>
+  <script src="/scripts/index.js"></script>
+<% end %>

@@ -38,10 +38,14 @@ GEM
     diff-lcs (1.5.1)
     dotenv (3.1.0)
     drb (2.2.1)
+    eventmachine (1.2.7)
     faraday (2.9.0)
       faraday-net_http (>= 2.0, < 3.2)
     faraday-net_http (3.1.0)
       net-http
+    faye-websocket (0.11.3)
+      eventmachine (>= 0.12.0)
+      websocket-driver (>= 0.5.1)
     hashdiff (1.1.0)
     hashie (5.0.0)
     i18n (1.14.4)
@@ -95,6 +99,8 @@ GEM
       rack (>= 3.0.0, < 4)
     rack-session (2.0.0)
       rack (>= 3.0.0)
+    rack-test (2.1.0)
+      rack (>= 1.3)
     rackup (2.1.0)
       rack (>= 3)
       webrick (~> 1.8)
@@ -142,6 +148,9 @@ GEM
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
     webrick (1.8.1)
+    websocket-driver (0.7.6)
+      websocket-extensions (>= 0.1.0)
+    websocket-extensions (0.1.5)
 
 PLATFORMS
   ruby
@@ -152,6 +161,7 @@ DEPENDENCIES
   bcrypt
   database_cleaner
   dotenv
+  faye-websocket
   jwt
   omniauth-cognito-idp
   omniauth-google-oauth2
@@ -159,6 +169,7 @@ DEPENDENCIES
   pry
   pry-byebug
   puma
+  rack-test
   rackup
   rspec
   sinatra
